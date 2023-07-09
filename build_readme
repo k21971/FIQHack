@@ -1,0 +1,7 @@
+make all && make install
+
+If first time installtion:
+  navigate to /opt/nethack/chroot/fiqhackdir/data
+  touch livelog logfile record xlogfile
+  chown games:games livelog logfile record xlogfile
+

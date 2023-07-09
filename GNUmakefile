@@ -1,8 +1,9 @@
 GAME = fiqhack
 DESTDIR =
-BINDIR = $(HOME)/fiqhackdir
+BINDIR = /opt/nethack/chroot/fiqhackdir
 DATADIR = $(BINDIR)/data
 STATEDIR = $(BINDIR)/save
+EXTRADIR = /dgldir/extrainfo-fh
 
 FLEX = flex
 BISON = bison
@@ -24,8 +25,8 @@ install: all
 	install -m 644 tilesets/dat/textascii.nh4ct $(DESTDIR)$(DATADIR)/textascii.nh4ct
 	install -m 644 tilesets/dat/textunicode.nh4ct $(DESTDIR)$(DATADIR)/textunicode.nh4ct
 
-CFLAGS = -g -O2 -Wall
-CXXFLAGS = -g -O2
+CFLAGS = -g3 -O0 -Wall
+CXXFLAGS = -g3 -O0
 
 CFLAGS += --std=c11 -DAIMAKE_NORETURN=_Noreturn -DWHEREIS
 
@@ -43,6 +44,9 @@ CPPFLAGS += -DDUMBMAKE
 CPPFLAGS += -DGAMESDATADIR=\"$(DATADIR)\"
 CPPFLAGS += -DGAMESSTATEDIR=\"$(STATEDIR)\"
 CPPFLAGS += -include dumbmake/dumbmake.h
+CPPFLAGS += -DPUBLIC_SERVER
+CPPFLAGS += -DDUMPDIR=\"/dumplog\"
+CPPFLAGS += -DEXTRAINFO_FN=\"$(EXTRADIR)/%s.extrainfo\"
 
 CPPFLAGS += -Ilibnethack/include
 CPPFLAGS += -Ilibnethack_common/include
