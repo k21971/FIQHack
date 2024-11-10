@@ -1761,6 +1761,7 @@ find_item_single(struct obj *obj, boolean spell, struct musable *m, boolean clos
     int recharged = 0;
     boolean cursed = FALSE;
     boolean blessed = FALSE;
+    boolean noncursed = FALSE; /* known noncursed */
     if (obj->mknown) {
         spe = obj->spe;
         recharged = obj->recharged;
@@ -1768,6 +1769,7 @@ find_item_single(struct obj *obj, boolean spell, struct musable *m, boolean clos
     if (spell || obj->mbknown) {
         cursed = obj->cursed;
         blessed = obj->blessed;
+        noncursed = !cursed;
     }
     struct obj *otmp;
 
@@ -1845,8 +1847,8 @@ find_item_single(struct obj *obj, boolean spell, struct musable *m, boolean clos
                   (otmp->oclass == TOOL_CLASS &&
                    !is_weptool(otmp) && objects[otyp].oc_charged)) &&
                  spe <= 0)) {
-                /* only blessed-charge /oW */
-                if (otmp->otyp == WAN_WISHING && !blessed)
+                /* only noncursed-charge /oW */
+                if (otmp->otyp == WAN_WISHING && noncursed)
                     continue;
 
                 /* don't charge these if we know it's 1:x */

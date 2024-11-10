@@ -3242,7 +3242,7 @@ typfnd:
     if (oclass == WAND_CLASS) {
         /* prevent wishing abuse */
         if (otmp->otyp == WAN_WISHING && !wizard)
-            rechrg = 1;
+            rechrg = 7;
         otmp->recharged = (unsigned)rechrg;
     }
 
