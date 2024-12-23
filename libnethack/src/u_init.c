@@ -223,7 +223,7 @@ static const struct trobj Xtra_food[] = {
 
 /* Explorer mode */
 static const struct trobj Wishing[] = {
-    {WAN_WISHING, 3, WAND_CLASS, 1, 0},
+    {WAN_WISHING, 1, WAND_CLASS, 1, 0},
     {0, 0, 0, 0, 0}
 };
 

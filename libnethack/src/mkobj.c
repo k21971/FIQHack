@@ -852,12 +852,8 @@ mksobj(struct level *lev, int otyp, boolean init, boolean artif, enum rng rng)
             }
             break;
         case WAND_CLASS:
-            /* Note: the RNG in question is probably either the death drop RNG,
-               or the level creation RNG; in both cases we want the charges on
-               the wand of wishing to be determined on the same RNG, rather than
-               using a separate RNG for wand of wishing charges */
             if (otmp->otyp == WAN_WISHING)
-                otmp->spe = 1 + rn2_on_rng(3, rng);
+                otmp->spe = 1;
             else if (otmp->otyp == WAN_SUMMONING)
                 otmp->spe = rn2_on_rng(5, rng) + 4;
             else

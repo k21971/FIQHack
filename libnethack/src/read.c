@@ -275,9 +275,9 @@ mon_choose_recharge(struct monst *mon, int bcsign)
                 score -= (10 * obj->recharged);
                 switch (otyp) {
                 case WAN_WISHING:
-                    /* a wand of wishing should preferably be blessed charged
+                    /* a wand of wishing should preferably be noncursed charged
                        when 0 charges left... */
-                    if (bcsign != 1 || obj->spe > 0)
+                    if (bcsign == -1 || obj->spe > 0)
                         score = 3 - obj->spe; /* only selected if nothing else to charge */
                     else
                         score = 500; /* always charge this first */
@@ -397,8 +397,11 @@ recharge(struct monst *mon, struct obj *obj, int curse_bless)
     }
 
     if (obj->oclass == WAND_CLASS) {
-        /* undo any prior cancellation, even when is_cursed */
-        if (obj->spe == -1)
+        /* Undo any prior cancellation, even when is_cursed.
+           Wishing remains cancelled because you can get cancelled wands
+           of wishing by wishing for them, and they can now be charged as
+           normal wands. */
+        if (obj->spe == -1 && obj->otyp != WAN_WISHING)
             obj->spe = 0;
 
         /*
@@ -421,8 +424,7 @@ recharge(struct monst *mon, struct obj *obj, int curse_bless)
          * separately, or a mixture, and this woud throw off the RNG.
          */
         n = (int)obj->recharged;
-        if (n > 0 && (obj->otyp == WAN_WISHING ||
-                      (n * n * n > rn2(7 * 7 * 7)))) {      /* recharge_limit */
+        if (n > 0 && (n * n * n > rn2(7 * 7 * 7))) {      /* recharge_limit */
             wand_explode(mon, obj);
             return;
         }
@@ -433,10 +435,11 @@ recharge(struct monst *mon, struct obj *obj, int curse_bless)
         if (is_cursed) {
             stripspe(mon, obj);
         } else {
-            int lim = (obj->otyp == WAN_WISHING) ? 3 :
-                (objects[obj->otyp].oc_dir != NODIR) ? 8 : 15;
+            int lim = (objects[obj->otyp].oc_dir != NODIR) ? 8 : 15;
+            if (obj->otyp == WAN_WISHING)
+                lim = 1;
 
-            n = (lim == 3) ? 3 : rn1(5, lim + 1 - 5);
+            n = (lim == 1) ? 1 : rn1(5, lim + 1 - 5);
             if (!is_blessed)
                 n = rnd(n);
 
